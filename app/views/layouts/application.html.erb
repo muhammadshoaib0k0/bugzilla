@@ -16,8 +16,11 @@
 
   <body>
   <%=render 'shared/header'%>
+   <%= render 'shared/flash' %>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
     <%= yield %>
+
+    <%= debug(params) if Rails.env.development? %>
   </body>
 </html>

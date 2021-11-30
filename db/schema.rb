@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_111810) do
+ActiveRecord::Schema.define(version: 2021_11_30_125745) do
 
   create_table "bugs", force: :cascade do |t|
     t.string "title"
-    t.string "type"
     t.string "status"
     t.string "img"
     t.text "description"
@@ -22,6 +21,9 @@ ActiveRecord::Schema.define(version: 2021_11_26_111810) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
     t.integer "project_id"
+    t.integer "assign_to"
+    t.datetime "deadline"
+    t.string "bug_type"
     t.index ["project_id"], name: "index_bugs_on_project_id"
     t.index ["user_id"], name: "index_bugs_on_user_id"
   end
@@ -58,9 +60,4 @@ ActiveRecord::Schema.define(version: 2021_11_26_111810) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "bugs", "projects"
-  add_foreign_key "bugs", "users"
-  add_foreign_key "projects", "users"
-  add_foreign_key "user_projects", "projects"
-  add_foreign_key "user_projects", "users"
 end

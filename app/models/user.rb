@@ -3,33 +3,28 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  enum user_type: [:manager, :developer, :qlty_as]
-        
+  #enum user_type: [:manager, :developer, :qa]
+  validates :name, presence: true
+  validates :user_type, presence: true      
 
   has_many :projects , dependent: :destroy
   has_many :bugs, dependent: :destroy
   
 
-  has_many :users_projects
-  has_many :projects, through: :users_projects 
-
-
-
-  def index
-    case current_user.role
-      when :admin
-        @installations = Installation.all
-      when :registered
-        @installations = current_user.installations
-      else 
-        @installations = current_user.installations.first
-    end
-  end 
-  def admin?
-    self.role == "admin"
+  has_many :user_projects
+  has_many :projects, through: :user_projects 
+  def developer?
+    return user_type.eql?('developer')
+  end
+  
+  def manager?
+    return user_type.eql?('manager')
   end
 
-  def registered?
-    self.role == "registered"
+  def qa?
+    return user_type.eql?('qa')
   end
+
+
+  
 end
