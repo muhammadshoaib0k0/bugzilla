@@ -5,11 +5,7 @@
 	<% bug.each do |b| %>
 	<div class="col-md-11 my-3">
 		<div class="h-100 p-5 text-white bg-dark rounded-3 d-flex align-items-center justify-content-around">
-			<% if b.image.present? %>
-			<div class: "col-md-1" >
-				<%= image_tag b.image.url, style: 'height:150px;width:150px;' %>
-			</div>
-			<% end %>
+			
 			<div class="col-md-8">
 				<h2><%= link_to "Title : #{b.title.capitalize}" , bug_path(b), style: "text-decoration:none" %></h2>
 				<hr>
@@ -22,8 +18,8 @@
 				<hr>
 				<div class="d-flex justify-content-between">
 					<small>Created by : <%= b.user.name.capitalize %></small>
-					<% if b.assigned_to.present? %>
-					<small>Assigned to : <%= User.find(b.assigned_to).name.capitalize %> </small>
+					<% if b.assign_to.present? %>
+					<small>Assign to : <%= User.find(b.assign_to).name.capitalize %> </small>
 					<% end %>
 				</div>
 			</div>

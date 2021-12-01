@@ -13,6 +13,9 @@ class ApplicationController < ActionController::Base
 	def manager?
 		!!user_signed_in? && current_user.user_type == "manager"
 	end
+	def developer?
+		!!user_signed_in? && current_user.user_type == "developer"
+	end
 
 	def qa?
 		!!user_signed_in? && current_user.user_type == "qa"
@@ -21,23 +24,18 @@ class ApplicationController < ActionController::Base
 	def can_create_bug?(project_id)
 		project = Project.find(project_id)
 		if qa?
-	     project.user_id == current_user.id
+		 project.user_id == current_user.id	
+		 UserProject.where(project_id: project_id, user_id: current_user.id).present?
+	    # project.user_id == current_user.id
 			return true
 		else
 			return false
 		end
-		# elsif qa?
-		# 	if UserProject.where(project_id: project_id, user_id: current_user.id).present?
-		# 		return true
-		# 	else
-		# 		return false
-		# 	end
-		# end
-		#return false
+	
 	end
-
+	
 	def can_update_bug(project_id)
-		!! UserProject.where(project_id: project_id, user_id: current_user.id).present? || 
+		!!UserProject.where(project_id: project_id, user_id: current_user.id).present? || 
 		Project.find(project_id).user_id == current_user.id
 	end
 end

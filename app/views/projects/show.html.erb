@@ -37,9 +37,10 @@
 		    		<small> Created at: <%=  time_ago_in_words(@project.created_at) %></small>
 				</div>
 		    </div>
-		    <%# <% if @project.bugs.count > 0 %>
-			  <%#  <%= render 'shared/bug_listing', bug: @project.bugs , title: "Bugs In Project" %>
-		<%#	<% end %> 
+		    
+			<% if @project.bugs.count > 0 %>
+			    <%= render 'shared/bug_listing', bug: @project.bugs , title: "Bugs In Project" %>
+			<% end %>
 		</div>
 	</div>
 </div>

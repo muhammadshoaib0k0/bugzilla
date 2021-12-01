@@ -6,7 +6,7 @@
 
     <div class="form-group">
       <%= f.label :title %><br />
-      <%= f.text_field :title, class: "form-control my-1" , autofocus: true, placeholder: "Enter Bug's Title" %>
+      <%= f.text_field :title, class: "form-control my-1" , autofocus: true, placeholder: "Enter Bud's Title" %>
     </div>
 
     <div class="form-group">
@@ -18,13 +18,12 @@
       <%= f.hidden_field :project_id, value: @project_id %>
     </div>
 
-
-    <%# <div class="field">
+    <div class="field">
       <%= f.hidden_field :status, value: "new" %>
+    </div>
+
     
-  
-    
-   
+
     <div class="field">
       <%= f.hidden_field :user_id, value: current_user.id %>
     </div>
@@ -38,9 +37,9 @@
       <%= f.label :deadline %><br />
       <%= f.date_select :deadline, start_year: Time.now.year, end_year: Time.now.year + 10 , :html=>{:class => "form-control form-control my-1"} %>
     </div>
-<span>
-     <%= f.file_field :image %>
-</span>
+
+   
+
     <div class="actions">
       <%= f.submit "Create" , class:"my-1 btn btn-primary col-12"%>
     </div>

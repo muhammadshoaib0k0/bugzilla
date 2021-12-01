@@ -6,6 +6,7 @@ ruby '3.0.2'
 gem 'devise', '~> 4.8'
 gem 'cancan'
 gem 'activestorage', '~> 6.1', '>= 6.1.4.1'
+gem 'carrierwave', '~> 2.0'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
