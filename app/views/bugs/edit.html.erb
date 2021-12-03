@@ -1,61 +1,95 @@
-<div class=" d-flex flex-column align-items-center my-4">
-
-  <h2>Update Bug</h2>
-
-  <%= form_for @bug do |f| %>
-
-    <div class="form-group">
-      <%= f.label :title %><br />
-      <%= f.text_field :title, class: "form-control my-1" , autofocus: true, placeholder: "Enter Bud's Title" , required: true %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :description %><br />
-      <%= f.text_field :description , class: "form-control my-1" , autofocus: true, placeholder: "Enter Bug's description", required: true %>
-    </div>
-
-    <div class="field">
-      <%= f.hidden_field :project_id, value: @bug.project_id %>
-    </div>
 
 
-    <!-- ========================================================= -->
-    <% if current_user.user_type == "developer"%>
-    <div class="form-group">
-      <% bug_status = [['New', 'new'],['Started','started']] %>
-      <% if @bug.bug_type == 'bug' %>
-        <% bug_status.push(['Resolved','resolved']) %>
-      <% else %>
-        <% bug_status.push(['Completed'],['Completed']) %>
-      <% end %>
-      <%= f.label :status %><br />
-      <%= f.select(:status, options_for_select(bug_status), {}, {:class => 'form-control form-control my-1', required: true})  %>
-    </div>
+
+<% if current_user.user_type == "qa"%>
+  <div class=" d-flex flex-column align-items-center my-4">
+    <h2>Update Bug</h2>
+    <%= form_for [@project, @bug] do |f|%>
+      <div class="form-group">
+        <%= f.label :title %><br />
+        <%= f.text_field :title, class: "form-control my-1" , autofocus: true, placeholder: "Enter Bud's Title" , required: true %>
+      </div>
+      <div class="form-group">
+        <%= f.label :description %><br />
+        <%= f.text_field :description , class: "form-control my-1" , autofocus: true, placeholder: "Enter Bug's description", required: true %>
+      </div>
+
+      <div class="field">
+        <%= f.hidden_field :project_id, value: @bug.project_id %>
+      </div>
     
+      <div class="field">
+       <%= f.hidden_field :user_id, value: current_user.id %>
+      </div>
 
+      <div class="form-group">
+        <%= f.label :bug_type %><br />
+        <%= f.select(:bug_type, options_for_select([['Bug', 'bug'], ['Feature', 'feature']] ), {}, {:class => 'form-control form-control my-1', required: true})  %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :deadline %><br />
+        <%= f.date_select :deadline, start_year: Time.now.year, end_year: Time.now.year + 10 , :html=>{:class => "form-control form-control my-1", required: true} %>
+      </div>
+
+      <div class="actions">
+        <%= f.file_field :img, accept: 'image/png,image/jpeg' , class:"my-1 btn btn-primary col-12"%>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "Update" , class:"my-1 btn btn-primary col-12"%>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+
+
+
+<% if current_user.user_type == "developer" %>
+  <div class=" d-flex flex-column align-items-center my-4">
+    <%= form_with model: [@project, @bug] do |f|%>
     <div>
-     
-     <%= check_box_tag(:assign_to) %>
+      <%= check_box_tag(:assign_to) %>
       <%= label_tag(:assign_to, "Himself") %>
-    <%end%>
-    <div class="field">
-      <%= f.hidden_field :user_id, value: current_user.id %>
     </div>
 
-    <div class="form-group">
-      <%= f.label :bug_type %><br />
-      <%= f.select(:bug_type, options_for_select([['Bug', 'bug'], ['Feature', 'feature']] ), {}, {:class => 'form-control form-control my-1', required: true})  %>
-    </div>
+        <div class="form-group">
+            <% bug_status = [['New', 'new'],['Started','started']] %>
+          <% if @bug.bug_type == 'bug' %>
+            <% bug_status.push(['Resolved','resolved']) %>
+            <% else %>
+            <% bug_status.push(['Completed']) %>
+            <% end %>
+              <div id='sta_show'>
+                <%= f.label :status %><br />
+                <%= f.select(:status, options_for_select(bug_status), {},
+                {:class => 'form-control form-control my-1',id:"statuses" ,required: true})  %>
+              </div>
+              </div>
+                <div class="actions">
+                  <%= f.submit "Update" , class:"my-1 btn btn-primary col-12"%>
+                </div>
+          <% end %>
+  </div>
+<% end %>
 
-    <div class="form-group">
-      <%= f.label :deadline %><br />
-      <%= f.date_select :deadline, start_year: Time.now.year, end_year: Time.now.year + 10 , :html=>{:class => "form-control form-control my-1", required: true} %>
-    </div>
+<script type="text/javascript">
+  $(function(){
+    const status_elem = $("#sta_show")
+    const assign_to = $('#assign_to')
 
+    if (!status_elem[0] || !assign_to[0]) return
+
+    const change_statuses = () => {
+      assign_to[0].checked ? status_elem.show() : status_elem.hide()
+    }
+
+    assign_to.on('change', (e) => {
+      change_statuses()
+    })
+
+    change_statuses()
    
-
-    <div class="actions">
-      <%= f.submit "Update" , class:"my-1 btn btn-primary col-12"%>
-    </div>
-  <% end %>
-</div>
+  })
+</script>

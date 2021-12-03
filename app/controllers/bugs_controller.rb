@@ -1,11 +1,10 @@
 class BugsController < ApplicationController
-
+before_action :get_pro
 	def index
 		flash[:danger] = "Bugs have no existance without project"
 		redirect_to projects_path
 		
 	end
-
 	def new
 		if can? :create, Bug
 			@project_id = params[:project_id]
@@ -25,23 +24,21 @@ class BugsController < ApplicationController
 			redirect_to root_path
 		end
 	end
-
 	def create
 		if can? :create, Bug
 			@project_id = params[:bug][:project_id]
 			@bug = Bug.new(bug_params)
 
-			if @bug.save
-				redirect_to project_path(@bug.project_id)
+				if @bug.save
+					redirect_to project_path(@bug.project_id)
+				else
+					flash[:danger] = "Request failed.."
+					render 'new'
+				end
 			else
-				flash[:danger] = "Request failed.."
-				render 'new'
-			end
-		else
-			flash[:danger] = "Only Manager or Qa can create bug"
+				flash[:danger] = "Only  or Qa can create bug"
 		end
 	end
-
 	def show
 		if can? :read, Bug
 			@bug = Bug.find(params[:id])
@@ -56,31 +53,32 @@ class BugsController < ApplicationController
 	end
 
 	def edit
-    id = params[:id]
-    @bug = Bug.find(id)
+    	if can? :update, Bug
+    		id = params[:id]
+        	@bug = Bug.find(id)
+    	end
 	end
 
-	def update
-    @bug = Bug.find(params[:id])
-    if  params[:assign_to].present?
-      @bug.update(assign_to: current_user.id)
-      flash[:success] = "Assigned to himself successfully"
-    end
+	def update    
+    	@bug = Bug.find(params[:id])
+    	if  params[:assign_to].present?
+      		@bug.update(assign_to: current_user.id)
+      		flash[:success] = "Assigned to himself successfully"
+    	end
 		if @bug.update(bug_params)
 			flash[:success] = "Updated Sucessfully"
 		else
 			flash[:danger] = "Update failed.. try again later.."
 		end
-		redirect_to bug_path(@bug)
+			redirect_to project_bug_path(@project, @bug)
 	end
-
-	
-	
 
 	private
-
+  def get_pro
+    @project = Project.find(params[:project_id])
+  end
+  
 	def bug_params
-		params.require(:bug).permit(:title,:description,:assign_to,:status,:bug_type,:project_id,:user_id,:deadline,:img)
+ 		params.require(:bug).permit(:title,:description,:assign_to,:status,:bug_type,:project_id,:user_id,:deadline,:img)
 	end
-
 end

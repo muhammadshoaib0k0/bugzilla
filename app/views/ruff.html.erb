@@ -35,3 +35,96 @@
       <%= f.label :bug_type %><br />
       <%= f.select(:bug_type, options_for_select([['Bug', 'bug'], ['Feature', 'feature']] ), {}, {:class => 'form-control form-control my-1', required: true})  %>
     </div>
+
+    	<small>Created by : <%= b.user.name.capitalize %></small>
+
+
+
+     
+
+
+	<small>Created by : <%= @bug.user.name.capitalize %></small>
+  <%= u.user_type.capitalize %>
+
+
+
+
+  <% if current_user.user_type == "developer"%>
+    <div class="form-group">
+      <% bug_status = [['New', 'new'],['Started','started']] %>
+      <% if @bug.bug_type == 'bug' %>
+        <% bug_status.push(['Resolved','resolved']) %>
+      <% else %>
+        <% bug_status.push(['Completed'],['Completed']) %>
+      <% end %>
+      <%= f.label :status %><br />
+      <%= f.select(:status, options_for_select(bug_status), {}, {:class => 'form-control form-control my-1', required: true})  %>
+    </div>
+    
+
+    
+     
+     <%= check_box_tag(:assign_to) %>
+      <%= label_tag(:assign_to, "Himself") %>
+    <%end%>
+
+
+
+
+def bug_status
+		@bug = MyBug.find(params[:id])
+		@bug.update(status: params[:status])
+		render json: {success: "ok"}
+	end
+  <script>
+$(document).on('change', '#bugselect', function() {
+  // alert("Hello");
+  var url = "/my_bugs/" + <%= @bug.id %> + "/bug_status"
+  console.log("URl", url);
+  $.ajax({
+    type: "POST",
+    url: url,
+    dataType: 'json',
+    data: {
+    	"status" : $("#bugselect").val()
+    },
+    success: function(data) {
+      alert('Bug status changed to : ' + $("#bugselect").val());
+    },
+    error: function(e){
+      alert('error');
+    }
+  })
+});
+</script> it all in show
+
+
+
+
+<label for="bugselect">Status : </label>
+						<select id="bugselect">
+							<% bug_status.each do |b| %>
+								<option <%= 'selected' if b[1] == @bug.status %> value=<%= b[1] %>><%= b[0] %></option>
+							<% end %>
+
+
+
+              $('#assign_to')[0].checked
+
+
+
+              $(document).ready(function(){
+    $("button").click(function(){
+        $("p").hide("slow", function(){
+          console.log(" The paragraph is now hidden ")
+        });
+      });
+});
+
+$('#sta_show').show
+
+
+ $('#assign_to')[0].checked(function(){
+        console.log("hello  ")
+        
+    })

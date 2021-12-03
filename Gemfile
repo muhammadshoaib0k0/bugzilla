@@ -7,7 +7,7 @@ gem 'devise', '~> 4.8'
 gem 'cancan'
 gem 'activestorage', '~> 6.1', '>= 6.1.4.1'
 gem 'carrierwave', '~> 2.0'
-
+gem 'jquery-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'

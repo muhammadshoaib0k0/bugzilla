@@ -1,52 +1,58 @@
 <div class="d-flex flex-column align-items-center">
 	<br>
-	<h1>Details</h1>
+	  <h1>Details</h1>
 	<br>
-	<div class="col-md-10">
-		<div class="h-100 p-5 text-white bg-dark rounded-3 d-flex align-items-center justify-content-around">
-			
-			<div class="col-md-8">
-				<h2>Title : <%= @bug.title.capitalize %></h2>
-				<hr>
-				<p>Description : <%= @bug.description.capitalize %> </p>
-				<br>
-				<hr>
-				<div class="d-flex justify-content-between">
-					<small>Created by : <%= @bug.user.name.capitalize %></small>
-					<% if @bug.assign_to.present? %>
-					<% if @bug.assign_to == current_user.id %>
-					<div id="bug-status">
-						<% bug_status = [['New','new'],['Started','started']] %>
-						<% if @bug.bug_type == 'bug' %>
-							<% bug_status.push(['Resolved','resolved']) %>
-						<% else %>
-							<% bug_status.push(['Completed','completed']) %>
-						<% end %>
-						<label for="bugselect">Status : </label>
-						<select id="bugselect">
-							<% bug_status.each do |b| %>
-								<option <%= 'selected' if b[1] == @bug.status %> value=<%= b[1] %>><%= b[0] %></option>
-							<% end %>
-						</select>
-					</div>
-					<% else %>
-					<div>
-						<small>Status : <%= @bug.status %></small>
-					</div>
-					<% end %>
-
-					<small>Assign to : <%= User.find(@bug.assign_to).name.capitalize %> </small>
-					<% end %>
-				</div>
-				<hr>
-				<div class="d-flex justify-content-center">
-					<%= link_to "Return", :back , class: "btn btn-primary mx-3" %>
-					<%= link_to "Project Details", project_path(Project.find(@bug.project_id)) , class: "btn btn-warning mx-3" %>
-					<% if can_update_bug(@bug.project_id) %>
-					<%= link_to "Edit Bug", edit_bug_path(@bug) , class: "btn btn-warning mx-3" %>
-					<% end %>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="col-md-10">
+    <div class="h-100 p-5 text-white bg-dark rounded-3 d-flex align-items-center justify-content-around">
+      <% if @bug.img.present? %>
+      <div>
+        <%= image_tag @bug.img.url, style: 'height:150px;width:150px;' , class: "col-md-2" %>
+      </div>
+      <% end %>
+      <div class="col-md-8">
+        <h2>Title : <%= @bug.title.capitalize %></h2>
+        <hr>
+          <p>Description : <%= @bug.description.capitalize %> </p><br>
+        <hr>
+          <div class="d-flex justify-content-between">				
+            <% if @bug.assign_to.present? %>
+              <% if @bug.assign_to == current_user.id %>
+                <div id="bug-status">
+                  <% bug_status = [['New','new'],['Started','started']] %>
+                  <% if @bug.bug_type == 'bug' %>
+                    <% bug_status.push(['Resolved','resolved']) %>
+                  <% else %>
+                    <% bug_status.push(['Completed','completed']) %>
+                  <% end %>				
+                  <label for="bugselect">Status :</label>
+                    <%= @bug.status %>
+                </div>
+              <% else %>
+                <div>
+                  <small>Status : <%= @bug.status %></small>
+                </div>
+              <% end %>
+                <small>Assign to : <%= User.find(@bug.assign_to).name.capitalize %> </small>
+            <% end %>
+          </div>
+        <hr>
+          <div class="d-flex justify-content-center">
+            <%= link_to "Return", :back , class: "btn btn-primary mx-3" %>
+            <%= link_to "Project Details", project_path(Project.find(@bug.project_id)) , class: "btn btn-warning mx-3" %>   
+            <% if current_user.user_type == "qa" && @bug.assign_to.nil? %>
+              <% if can_update_bug(@bug.project_id) %>
+                <%= link_to "Edit Bug", edit_project_bug_path(@project,@bug) , class: "btn btn-warning mx-3" %>
+              <% end %>
+            <%end%>    
+            <% if current_user.user_type == "developer" %>
+              <% if current_user.user_type == "developer"  &&  @bug.assign_to.nil? || current_user.id==@bug.assign_to && @bug.status == 'new' || @bug.status == 'started'%>
+                <% if can_update_bug(@bug.project_id) %>
+                  <%= link_to "check Bug", edit_project_bug_path(@project,@bug) , class: "btn btn-warning mx-3" %>
+                <%end%>
+              <%end%>
+            <% end %>
+         </div>
+      </div>
+    </div>
+  </div>
 </div>
